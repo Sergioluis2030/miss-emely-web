@@ -25,12 +25,6 @@ npm run preview
 No hay backend todavía, así que el login valida contra usuarios de ejemplo
 en `src/data/mockUsers.js`:
 
-| Rol      | Usuario     | Contraseña   |
-|----------|-------------|--------------|
-| Docente  | `missemely` | `profe123`   |
-| Alumna   | `sofia`     | `alumno123`  |
-| Alumno   | `mateo`     | `alumno123`  |
-
 En la pantalla de login también hay botones de "Cuentas de prueba" que
 llenan los campos automáticamente.
 

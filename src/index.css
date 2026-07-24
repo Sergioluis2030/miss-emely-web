@@ -1,0 +1,114 @@
+:root {
+  --blue: #4A90E2;
+  --blue-dark: #3A73BA;
+  --blue-light: #EAF2FD;
+  --green: #2ECC71;
+  --green-dark: #23A75B;
+  --yellow: #F1C40F;
+  --orange: #FF8C42;
+  --purple: #9B59B6;
+  --pink: #FF6B9D;
+
+  --bg: #F7FAFF;
+  --surface: #FFFFFF;
+  --text: #2D3748;
+  --text-soft: #6B7A99;
+  --border: #E3EBFA;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(74, 144, 226, 0.08);
+  --shadow-md: 0 8px 24px rgba(74, 144, 226, 0.14);
+  --shadow-lg: 0 16px 40px rgba(74, 144, 226, 0.18);
+
+  --font-display: 'Baloo 2', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+a {
+  color: inherit;
+}
+
+/* Visible focus for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--blue-light);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cfe0fb;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--blue);
+  font-size: 18px;
+}
