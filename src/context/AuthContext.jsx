@@ -1,38 +1,55 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { findUser } from '../data/mockUsers'
+import { api, setStoredToken, clearStoredToken, getStoredToken } from '../utils/api'
 
 const AuthContext = createContext(null)
-const STORAGE_KEY = 'missemely.session'
+const SESSION_KEY = 'missemely.session'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isReady, setIsReady] = useState(false)
 
+  // Al montar, si hay token guardado intentamos restaurar la sesión con /auth/me
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setUser(JSON.parse(raw))
-    } catch {
-      // sesión corrupta o no disponible, se ignora
-    } finally {
-      setIsReady(true)
+    async function restore() {
+      const token = getStoredToken()
+      if (!token) {
+        setIsReady(true)
+        return
+      }
+      try {
+        const data = await api('/auth/me')
+        setUser(data.user)
+        localStorage.setItem(SESSION_KEY, JSON.stringify(data.user))
+      } catch {
+        // token inválido o expirado: limpiamos la sesión
+        clearStoredToken()
+        localStorage.removeItem(SESSION_KEY)
+      } finally {
+        setIsReady(true)
+      }
     }
+    restore()
   }, [])
 
-  function login(username, password) {
-    const found = findUser(username, password)
-    if (!found) {
-      return { ok: false, message: 'Usuario o contraseña incorrectos. Inténtalo de nuevo.' }
+  async function login(username, password) {
+    try {
+      const data = await api('/auth/login', {
+        method: 'POST',
+        body: { username, password },
+      })
+      setStoredToken(data.token)
+      setUser(data.user)
+      localStorage.setItem(SESSION_KEY, JSON.stringify(data.user))
+      return { ok: true }
+    } catch (err) {
+      return { ok: false, message: err.message }
     }
-    const { password: _pw, ...safeUser } = found
-    setUser(safeUser)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(safeUser))
-    return { ok: true }
   }
 
   function logout() {
+    clearStoredToken()
+    localStorage.removeItem(SESSION_KEY)
     setUser(null)
-    localStorage.removeItem(STORAGE_KEY)
   }
 
   return (

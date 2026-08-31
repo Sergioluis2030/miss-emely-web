@@ -1,8 +1,14 @@
-import { CalendarCheck2, LogOut, Star, X } from 'lucide-react'
+import { CalendarCheck2, ClipboardCheck, KeyRound, LogOut, Star, UserPlus, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
-export default function Sidebar({ isOpen, onClose }) {
+export default function Sidebar({ isOpen, onClose, section, onNavigate }) {
   const { user, logout } = useAuth()
+  const isTeacher = user?.role === 'teacher'
+
+  function go(sectionName, id) {
+    onNavigate(sectionName, id)
+    onClose()
+  }
 
   return (
     <>
@@ -19,9 +25,64 @@ export default function Sidebar({ isOpen, onClose }) {
         </div>
 
         <nav className="sidebar-nav" aria-label="Navegación principal">
-          <button className="sidebar-link sidebar-link-active" type="button">
+          <button
+            className={`sidebar-link ${section === 'actividades' ? 'sidebar-link-active' : ''}`}
+            type="button"
+            onClick={() => go('actividades')}
+          >
             <CalendarCheck2 size={20} />
             <span>Actividades</span>
+          </button>
+
+          {isTeacher ? (
+            <>
+              <button
+                className={`sidebar-link ${section === 'usuarios' ? 'sidebar-link-active' : ''}`}
+                type="button"
+                onClick={() => go('usuarios')}
+              >
+                <UserPlus size={20} />
+                <span>Usuarios</span>
+              </button>
+
+              <button
+                className={`sidebar-link ${section === 'asistencia' ? 'sidebar-link-active' : ''}`}
+                type="button"
+                onClick={() => go('asistencia')}
+              >
+                <ClipboardCheck size={20} />
+                <span>Asistencia</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className={`sidebar-link ${section === 'asistencia' ? 'sidebar-link-active' : ''}`}
+                type="button"
+                onClick={() => go('asistencia')}
+              >
+                <ClipboardCheck size={20} />
+                <span>Mi asistencia</span>
+              </button>
+
+              <button
+                className={`sidebar-link ${section === 'contrasena' ? 'sidebar-link-active' : ''}`}
+                type="button"
+                onClick={() => go('contrasena')}
+              >
+                <KeyRound size={20} />
+                <span>Cambiar contraseña</span>
+              </button>
+            </>
+          )}
+
+          <button
+            className={`sidebar-link ${section === 'perfil' ? 'sidebar-link-active' : ''}`}
+            type="button"
+            onClick={() => go('perfil', user.id)}
+          >
+            <UserPlus size={20} />
+            <span>Mi perfil</span>
           </button>
         </nav>
 
@@ -29,7 +90,12 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <div className="sidebar-footer">
           {user && (
-            <div className="sidebar-user">
+            <button
+              className="sidebar-user-link"
+              onClick={() => go('perfil', user.id)}
+              type="button"
+              aria-label="Ir a mi perfil"
+            >
               <div className="sidebar-user-avatar" style={{ background: user.avatarColor }}>
                 {user.avatarEmoji}
               </div>
@@ -39,7 +105,7 @@ export default function Sidebar({ isOpen, onClose }) {
                   {user.role === 'teacher' ? 'Docente' : user.grade || 'Alumno/a'}
                 </p>
               </div>
-            </div>
+            </button>
           )}
           <button className="sidebar-logout" onClick={logout} type="button">
             <LogOut size={18} />

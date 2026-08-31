@@ -1,13 +1,11 @@
 import { useRef, useState } from 'react'
 import { ImagePlus, X, PenLine } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
 import { useActivities } from '../context/ActivitiesContext'
 import { todayISO } from '../utils/date'
 
 const MAX_IMAGE_MB = 4
 
 export default function NewActivityForm() {
-  const { user } = useAuth()
   const { createActivity } = useActivities()
   const fileInputRef = useRef(null)
 
@@ -16,6 +14,7 @@ export default function NewActivityForm() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [imageUrl, setImageUrl] = useState(null)
+  const [imageFile, setImageFile] = useState(null)
   const [imageError, setImageError] = useState('')
   const [error, setError] = useState('')
 
@@ -24,6 +23,7 @@ export default function NewActivityForm() {
     setTitle('')
     setDescription('')
     setImageUrl(null)
+    setImageFile(null)
     setImageError('')
     setError('')
     if (fileInputRef.current) fileInputRef.current.value = ''
@@ -45,17 +45,22 @@ export default function NewActivityForm() {
     const reader = new FileReader()
     reader.onload = () => setImageUrl(reader.result)
     reader.readAsDataURL(file)
+    setImageFile(file)
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     if (!title.trim() || !description.trim() || !date) {
       setError('Completa la fecha, el título y la descripción de la actividad.')
       return
     }
-    createActivity({ date, title, description, imageUrl, author: user })
-    resetForm()
-    setIsOpen(false)
+    try {
+      await createActivity({ date, title, description, image: imageFile })
+      resetForm()
+      setIsOpen(false)
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   if (!isOpen) {

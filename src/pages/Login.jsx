@@ -12,7 +12,7 @@ export default function Login() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     if (!username.trim() || !password) {
@@ -20,12 +20,9 @@ export default function Login() {
       return
     }
     setSubmitting(true)
-    // Pequeña espera simulada, útil cuando esto se conecte a un backend real
-    setTimeout(() => {
-      const result = login(username, password)
-      if (!result.ok) setError(result.message)
-      setSubmitting(false)
-    }, 300)
+    const result = await login(username, password)
+    if (!result.ok) setError(result.message)
+    setSubmitting(false)
   }
 
   function fillDemo(role) {

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
@@ -22,9 +23,11 @@ export default function Topbar({ onOpenMenu }) {
             : 'Revisa las actividades de tu clase'}
         </p>
       </div>
-      <div className="topbar-avatar" style={{ background: user?.avatarColor }} aria-hidden="true">
-        {user?.avatarEmoji}
-      </div>
+      <Link to={`/profile/${user.id}`} className="topbar-avatar-link" aria-label="Mi perfil">
+        <div className="topbar-avatar" style={{ background: user?.avatarColor }} aria-hidden="true">
+          {user?.avatarEmoji}
+        </div>
+      </Link>
     </header>
   )
 }

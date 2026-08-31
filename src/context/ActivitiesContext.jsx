@@ -1,68 +1,77 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { SEED_ACTIVITIES } from '../data/mockActivities'
+import { api, apiUpload } from '../utils/api'
 
 const ActivitiesContext = createContext(null)
-const STORAGE_KEY = 'missemely.activities'
-
-function loadInitial() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch {
-    // si falla, seguimos con la data semilla
-  }
-  return SEED_ACTIVITIES
-}
 
 export function ActivitiesProvider({ children }) {
-  const [activities, setActivities] = useState(loadInitial)
+  const [activities, setActivities] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
+  // Carga las actividades (con sus comentarios) al montar.
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(activities))
-  }, [activities])
-
-  // Simula POST /api/activities (ver CreateActivityDTO)
-  function createActivity({ date, title, description, imageUrl, author }) {
-    const newActivity = {
-      id: `act-${Date.now()}`,
-      date,
-      title: title.trim(),
-      description: description.trim(),
-      imageUrl: imageUrl || null,
-      authorId: author.id,
-      authorName: author.fullName,
-      createdAt: new Date().toISOString(),
-      comments: [],
+    let active = true
+    async function load() {
+      try {
+        const data = await api('/activities')
+        if (active) setActivities(data.activities)
+      } catch (err) {
+        if (active) setError(err.message)
+      } finally {
+        if (active) setLoading(false)
+      }
     }
-    setActivities((prev) => [newActivity, ...prev])
-    return newActivity
+    load()
+    return () => {
+      active = false
+    }
+  }, [])
+
+  async function createActivity({ date, title, description, image }) {
+    const formData = new FormData()
+    formData.append('date', date)
+    formData.append('title', title)
+    formData.append('description', description)
+    if (image) formData.append('image', image)
+    const data = await apiUpload('/activities', { method: 'POST', formData })
+    setActivities((prev) => [data.activity, ...prev])
+    return data.activity
   }
 
-  // Simula DELETE /api/activities/:id
-  function deleteActivity(activityId) {
+  async function deleteActivity(activityId) {
+    await api(`/activities/${activityId}`, { method: 'DELETE' })
     setActivities((prev) => prev.filter((a) => a.id !== activityId))
   }
 
-  // Simula POST /api/activities/:id/comments (ver CreateCommentDTO)
-  function addComment(activityId, { text, author }) {
-    const newComment = {
-      id: `c-${Date.now()}`,
-      authorId: author.id,
-      authorName: author.fullName,
-      authorRole: author.role,
-      text: text.trim(),
-      createdAt: new Date().toISOString(),
-    }
+  async function updateActivity(activityId, { date, title, description, image }) {
+    const formData = new FormData()
+    formData.append('date', date)
+    formData.append('title', title)
+    formData.append('description', description)
+    if (image) formData.append('image', image)
+    const data = await apiUpload(`/activities/${activityId}`, { method: 'PATCH', formData })
+    setActivities((prev) =>
+      prev.map((a) => (a.id === activityId ? data.activity : a))
+    )
+    return data.activity
+  }
+
+  async function addComment(activityId, { text }) {
+    const data = await api(`/activities/${activityId}/comments`, {
+      method: 'POST',
+      body: { text },
+    })
     setActivities((prev) =>
       prev.map((a) =>
-        a.id === activityId ? { ...a, comments: [...a.comments, newComment] } : a
+        a.id === activityId ? { ...a, comments: [...a.comments, data.comment] } : a
       )
     )
+    return data.comment
   }
 
   return (
     <ActivitiesContext.Provider
-      value={{ activities, createActivity, deleteActivity, addComment }}
+      value={{ activities, loading, error, createActivity, deleteActivity, updateActivity, addComment }}
     >
       {children}
     </ActivitiesContext.Provider>

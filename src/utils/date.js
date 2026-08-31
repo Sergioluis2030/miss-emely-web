@@ -61,3 +61,35 @@ export function todayISO() {
   const day = String(d.getDate()).padStart(2, '0')
   return `${y}-${m}-${day}`
 }
+
+// Devuelve el lunes de la semana a la que pertenece la fecha dada
+export function startOfWeek(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const dow = (d.getDay() + 6) % 7 // lunes = 0
+  d.setDate(d.getDate() - dow)
+  return d
+}
+
+// True si la fecha ISO dada cae dentro de la semana que comienza en monday
+export function isInWeek(isoDate, monday) {
+  const date = parseISODate(isoDate)
+  const weekStart = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate())
+  const weekEnd = new Date(weekStart)
+  weekEnd.setDate(weekEnd.getDate() + 6)
+  return date >= weekStart && date <= weekEnd
+}
+
+// Devuelve una fecha sumando n días (acepta negativos)
+export function addDays(date, n) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  d.setDate(d.getDate() + n)
+  return d
+}
+
+// Devuelve la fecha ISO "aaaa-mm-dd" a partir de una fecha
+export function toISODate(date) {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
