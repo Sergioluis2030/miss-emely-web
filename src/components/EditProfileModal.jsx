@@ -66,7 +66,7 @@ export default function EditProfileModal({ profile, onClose, onSubmit, error }) 
       <div className="modal edit-profile-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Editar perfil</h3>
-          <button className="modal-close" onClick={onClose} aria-label="Cerrar">
+          <button className="modal-close"  onClick={onClose} aria-label="Cerrar">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -162,10 +162,10 @@ export default function EditProfileModal({ profile, onClose, onSubmit, error }) 
           {error && <p className="modal-error">{error}</p>}
 
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose} disabled={submitting}>
+            <button type="button" className="edit-activity-cancel" onClick={onClose} disabled={submitting}>
               Cancelar
             </button>
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
+            <button type="submit" className="edit-activity-cancel" disabled={submitting}>
               {submitting ? 'Guardando...' : 'Guardar cambios'}
             </button>
           </div>

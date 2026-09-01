@@ -79,8 +79,7 @@ export default function ProfileHeader({ profile, isOwn, onRefresh }) {
 
         {isOwn && (
           <div className="profile-actions">
-            <button
-              className="btn btn-primary"
+            <button class="usuario-block-btn"
               onClick={() => setShowEditModal(true)}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

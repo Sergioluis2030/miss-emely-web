@@ -92,6 +92,7 @@ export default function Sidebar({ isOpen, onClose, section, onNavigate }) {
           {user && (
             <button
               className="sidebar-user-link"
+              class="usuario-block-btn"
               onClick={() => go('perfil', user.id)}
               type="button"
               aria-label="Ir a mi perfil"
