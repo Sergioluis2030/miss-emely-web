@@ -1,6 +1,6 @@
 const API_URL =
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) ||
-  'https://www.sergioluisqf.lat/api'
+  'https://backend2.sergioluisqf.lat/api'
 
 const TOKEN_KEY = 'missemely.token'
 
