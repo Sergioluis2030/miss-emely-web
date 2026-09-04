@@ -26,14 +26,6 @@ export default function Login() {
   }
 
   function fillDemo(role) {
-    if (role === 'teacher') {
-      setUsername('missemely')
-      setPassword('profe123')
-    } else {
-      setUsername('sofia')
-      setPassword('alumno123')
-    }
-    setError('')
   }
 
   return (
@@ -94,19 +86,7 @@ export default function Login() {
             <button type="submit" className="login-submit" disabled={submitting}>
               {submitting ? 'Ingresando…' : 'Iniciar sesión'}
             </button>
-          </form>
-
-          <div className="login-demo">
-            <p>Cuentas de prueba:</p>
-            <div className="login-demo-buttons">
-              <button type="button" onClick={() => fillDemo('teacher')}>
-                👩‍🏫 Soy Miss Emely
-              </button>
-              <button type="button" onClick={() => fillDemo('student')}>
-                👧 Soy alumna/o
-              </button>
-            </div>
-          </div>
+          </form>          
         </div>
       </div>
     </div>

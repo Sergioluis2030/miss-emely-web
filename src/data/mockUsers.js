@@ -3,42 +3,6 @@
 // La maestra puede agregar más usuarios desde la sección "Usuarios" del panel.
 
 export const MOCK_USERS = [
-  {
-    id: 'u-teacher-1',
-    username: 'missemely',
-    password: 'profe123',
-    role: 'teacher',
-    fullName: 'Miss Emely',
-    avatarEmoji: '👩‍🏫',
-    avatarColor: '#4A90E2',
-  },
-  {
-    id: 'u-student-1',
-    username: 'sofia',
-    password: 'alumno123',
-    role: 'student',
-    fullName: 'Sofía Cordova',
-    kinship: 'alumno',
-    birthday: '2019-05-14',
-    favoriteColor: '#FF6B9D',
-    grade: '1° Grado A',
-    avatarEmoji: '👧',
-    avatarColor: '#FF6B9D',
-    canComment: true,
-  },
-  {
-    id: 'u-student-2',
-    username: 'ivan',
-    password: 'alumno123',
-    role: 'student',
-    fullName: 'Ivan sonic',
-    kinship: 'alumno',
-    favoriteColor: '#F1C40F',
-    grade: '1° Grado A',
-    avatarEmoji: '👦',
-    avatarColor: '#F1C40F',
-    canComment: true,
-  },
 ]
 
 // Genera un nombre de usuario a partir de la primera letra del nombre y el apellido.

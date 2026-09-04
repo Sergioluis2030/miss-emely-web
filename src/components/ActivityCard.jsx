@@ -112,7 +112,7 @@ export default function ActivityCard({ activity }) {
         )}
 
         <p className="activity-author">
-            Publicado por
+            Publicado por 
             <Link to={`/profile/${activity.authorId}`} className="author-link">
               {activity.authorName}
             </Link>
